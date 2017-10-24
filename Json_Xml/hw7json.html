@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#Content").append("<ul></ul>")
+                $("#get").click(function(){
+                    //get zip code
+                    var zipcode = $("#zip").val();
+                    //if not enter
+                    if (zipcode == "") 
+                    {
+                        alert("Please enter zip code");
+                        return false;
+                    }
+                    //url = "http://api.openweathermap.org/data/2.5/weather?q="+zip,
+                    var urlf = "/weather/"+zipcode;
+                    $.ajax({
+                        //get json
+                        type: "GET",
+                        // url: "http://127.0.0.1:3000/weather/"+zipcode,
+                        url: urlf,
+                        async:false,
+
+                        dataType: "json",
+                        success: function(json){
+                            alert("Success.");
+                            //weather
+                            $("#weather").text(json.weather[0].description);
+                            //temperature
+                            $("#temp").text((json.main.temp - 273.16).toFixed(2)+"C");
+                            //speed 
+                            $("#Swind").text(json.wind.speed+"mps");
+                            //degree
+                            $("#Dwind").text(json.wind.deg);
+                        },
+                        //error
+                        error:function(){
+                            alert("An error occurred while processing JSON file.");
+                        }
+                    });
+                    // $.getJSON(urlf,function(json){
+                    //     //weather
+                    //         $("#weather").text(json.weather[0].description);
+                    //         //temperature
+                    //         $("#temp").text((json.main.temp - 273.16).toFixed(2)+"C");
+                    //         //speed 
+                    //         $("#Swind").text(json.wind.speed+"mps");
+                    //         //degree
+                    //         $("#Dwind").text(json.wind.deg);
+                    // });
+                });
+            });
+        </script>
+        <!-- css -->
+        <style type="text/css">
+            li{list-style-type:none;}
+        </style>
+    </head>
+    <body>
+        <form>
+            <!--enter the zip -->
+        Zip code: <input type="text" id="zip" value="">
+        <input id = "get" type="submit" value="Get Weather">
+        </form>
+        <div id = "Content">
+            <ul>
+                <li>Current Weather: <text id = "weather"></text></li>
+                <li>Temperature: <text id = "temp"></text></li>
+                <li>Wind Speed: <text id = "Swind"></text></li>
+                <li>Wind Direction: <text id = "Dwind"></text></li>
+            </ul>
+        </div>
+    </body>
+</html>

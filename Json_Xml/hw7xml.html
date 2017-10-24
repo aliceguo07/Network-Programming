@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#Content").append("<ul></ul>")
+				$("#get").click(function(){
+					//get zip code
+					var zipcode = $("#zip").val();
+					//if not enter
+					if (zipcode == "") 
+					{
+           				alert("Please enter zip code");
+           	 			return false;
+        			}
+        			$.ajax({
+        				//get xml
+        				type: "GET",
+        				url: "http://api.openweathermap.org/data/2.5/weather?zip="+zipcode+"&mode=xml",
+        				async:false,
+        				dataType: "xml",
+        				success: function(xml){
+        					alert("Success");
+        					var Sweather= $(xml).find('weather').attr('value');
+        					$("#weather").append(Sweather);
+        					var Stemp = $(xml).find('temperature').attr('value');
+        					Stemp = (Stemp - 273.16).toFixed(2);
+        					$("#temp").append(Stemp + "˚C");
+        					var Swind= $(xml).find('wind').find('speed').attr('name');
+        					$("#Swind").append(Swind + "mps");
+        					var Dwind= $(xml).find('wind').find('direction').attr('name');
+        					$("#Dwind").append(Dwind);
+        				},
+        				error:function(){
+        					alert("An error occurred while processing XML file.");
+        				}
+        			});
+				});
+			});
+		</script>
+		<!-- css -->
+		<style type="text/css">
+			li{list-style-type:none;}
+		</style>
+	</head>
+	<body>
+		<!-- enter the zip -->
+		<form>
+		Zip code: <input type="text" id="zip" value="">
+		<input id = "get" type="submit" value="Get Weather">
+		</form>
+		<div id = "Content">
+			<ul>
+				<li>Current Weather: <text id = "weather"></text></li>
+        	    <li>Temperature: <text id = "temp"></text></li>
+            	<li>Wind Speed: <text id = "Swind"></text></li>
+            	<li>Wind Direction: <text id = "Dwind"></text></li>
+            </ul>
+        </div>
+
+	</body>
+</html>
